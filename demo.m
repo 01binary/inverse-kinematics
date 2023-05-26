@@ -1,6 +1,8 @@
-% Let's try basic reverse calculation given a perfect answer going forward
+% Plug in joint angles (from Blender) to calculate end effector position & orientation
 
 Effector = fk(-1.143311, 0.6155, -2.5211)
+
+% This is the result of calling the fk() function above with joint angles
 
 Effector = [
     0.2426    0.3362   -0.9100    1.3954
@@ -9,15 +11,20 @@ Effector = [
          0         0         0    1.0000
 ];
 
-% OK, now apply the solving method with variable matrices
+% Now go in reverse (calculate joint angles from end effector position & orientation)
+% The joint angles resoluting from solving the inverse equations should match what we started with
+
+% Generate matrixes for each joint with theta1, theta2, and theta3 as unknowns
 
 Base =      dh(a = 0,    d = 1,     alpha = pi / 2,  theta = theta1)
+% This is a fixed offset matrix, not a joint
 Offset =    dh(a = -0.2, d = 0,     alpha = 0,       theta = 0)
 Shoulder =  dh(a = 3.5,  d = 0,     alpha = 0,       theta = theta2)
 Elbow =     dh(a = 3.5,  d = 0,     alpha = 0,       theta = theta3)
+% This is a fixed offset matrix, not a joint
 Wrist =     dh(a = 2.5,  d = -0.18, alpha = 0,       theta = 0.959931)
 
-% Solve the equation
+% Solve the inverse kinematics equation for the three unknowns
 
 Base * Offset * Shoulder * Elbow * Wrist == Effector
 
