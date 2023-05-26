@@ -52,80 +52,80 @@ sin(theta1) == -0.9100
 
 theta1 = -1.1433
 
-% Select (1,4) from LHS and RHS
+% Select (2,4) from LHS and RHS
 
-cos(theta2) == 0.8166
+(7*cos(theta2)*sin(-1.1433))/2 - sin(-1.1433)/5 == -2.4187
 
-% Solve for theta2 (Shoulder)
+6557288672914079/36028797018963968 - (57376275887998193*cos(theta2))/18014398509481984 == -2.4187
 
-theta2 = 0.6153
+0.1820 - 3.1850 * cos(theta2) == -2.4187
 
-% Select (3,1) from LHS and RHS
+-3.1850 * cos(theta2) == -2.6007
 
-0.4713 == cos(theta3) * 0.2991 + sin(theta3) * 0.8595
+cos(theta2) == 0.8165
 
-% Select (1,2) from LHS and RHS
+theta2 = 0.6155
 
--0.2393 == cos(theta3) * 0.3915 + sin(theta3) * -0.1363
+% Select (1,1) from LHS and RHS
 
-% We got a system of equations with theta3 as the unknown
-% Solve for sin(theta3) in terms of cos(theta3)
+cos(theta1)*cos(theta2) == (cos(theta3)*((1213*cos(8646289787802775/9007199254740992))/(5000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2)) - (1681*sin(8646289787802775/9007199254740992))/(5000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2))))/(cos(theta3)^2 + sin(theta3)^2) - (sin(theta3)*((1681*cos(8646289787802775/9007199254740992))/(5000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2)) + (1213*sin(8646289787802775/9007199254740992))/(5000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2))))/(cos(theta3)^2 + sin(theta3)^2)
 
-0.4713 == cos(theta3) * 0.2991 + sin(theta3) * 0.8595
+0.3385 == (cos(theta3)*(0.1391 - (1681*0.8192)/(5000))) - (sin(theta3)*((1681*cos(8646289787802775/9007199254740992))/5000 + (1213*0.8192)/5000))
 
-0.4713 - cos(theta3) * 0.2991 == sin(theta3) * 0.8595
+0.3385 == cos(theta3) * -0.1363 - sin(theta3) * 0.3915
 
-(0.4713 - cos(theta3) * 0.2991) / 0.8595 == sin(theta3)
+% Select (2,1) from LHS and RHS
 
-0.5483 - cos(theta3) * 0.3480 == sin(theta3)
+0.8165*-0.9100 == (sin(theta3)*((7379*cos(8646289787802775/9007199254740992))/(10000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2)) + (213*sin(8646289787802775/9007199254740992))/(400*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2))))/(cos(theta3)^2 + sin(theta3)^2) - (cos(theta3)*((213*cos(8646289787802775/9007199254740992))/(400*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2)) - (7379*sin(8646289787802775/9007199254740992))/(10000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2))))/(cos(theta3)^2 + sin(theta3)^2)
 
-% Solve for cos(theta3) by subbing into the other equation
-% Don't take the cosine yet, we are setting up for atan2
+-0.7430 == sin(theta3) * 0.8594 - cos(theta3)* -0.2991
 
--0.2393 == cos(theta3) * 0.3915 + sin(theta3) * -0.1363
+% System of equations from (1,1) and (2,1)
 
--0.2393 == cos(theta3) * 0.3915 + 0.5483 - cos(theta3) * 0.3480 * -0.1363
+0.3385 == cos(theta3) * -0.1363 - sin(theta3) * 0.3915
+-0.7430 == sin(theta3) * 0.8594 - cos(theta3)* -0.2991
 
--0.2393 == cos(theta3) * 0.3915 + 0.5483 - cos(theta3) * -0.0474
+% Solve for cos(theta3)
 
--0.7876 == 0.3915 * cos(theta3) + 0.0474 * cos(theta3)
+0.3385 == cos(theta3) * -0.1363 - sin(theta3) * 0.3915
 
--0.7876 == 0.4389 * cos(theta3)
+0.3385 == cos(theta3) * -0.1363 - sin(theta3) * 0.3915
 
--1.7945 == cos(theta3)
+0.3385 + sin(theta3) * 0.3915 == cos(theta3) * -0.1363
 
-% Solve for sin(theta3) by subbing back into first equation
-% Don't take the sine yet, we are setting up for atan2
+-2.4835 + -2.8723 * sin(theta3) == cos(theta3)
 
-0.4713 == -1.7945 * 0.2991 + sin(theta3) * 0.8595
+% Solve for sin(theta3)
 
-0.4713 == sin(theta3) * 0.8595 - 0.5367
+-0.7430 == sin(theta3) * 0.8594 - (-2.4835 + -2.8723 * sin(theta3)) * -0.2991
 
-1.008 == sin(theta3) * 0.8595
+-0.7430 == sin(theta3) * 0.8594 + (-2.4835 - 2.8723 * sin(theta3)) * 0.2991
 
-1.1728 == sin(theta3)
+-0.7430 == 0.8594 * sin(theta3) + -0.7428 - 0.8591 * sin(theta3)
 
-% Now that we know both sin and cos of theta3, we can take atan2
+-0.7430 == 0.8594 * sin(theta3) - 0.7428 - 0.8591 * sin(theta3)
 
-cos(theta3) == -1.7945
-sin(theta3) == 1.1728
+-2.0000e-04 == 0.8594 * sin(theta3) - 0.8591 * sin(theta3)
 
-theta3 == atan2(-1.7945, 1.1728)
+-2.0000e-04 == 0.0003 * sin(theta3)
 
-theta3 = -0.9919
+-2.0000e-04 / 0.0003 == sin(theta3)
 
-% All joint variables found...
+-0.6667 == sin(theta3)
 
-theta1 = -1.1433
-theta2 = 0.6153
-theta3 = -0.9919
+% Substitute into the first equation in the system
 
-% Compare with what we set in Blender
+-2.4835 + -2.8723 * -0.6667 == cos(theta3)
 
-theta1b = -1.1433
-theta2b = 0.6155
-theta3b = -2.5211
+-0.5685 == cos(theta3)
 
-% theta3 came out wrong
-% Is it my math work that made it wrong, or not following the algorithm?
+% Now we have both sin and cos of theta3
 
+sin(theta3) == -0.6667
+cos(theta3) == -0.5685
+
+% Solve for theta3
+
+theta3 == atan2(-0.5685, -0.6667)
+
+theta3 == -2.4355
