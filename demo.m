@@ -1,131 +1,180 @@
-% Plug in joint angles (from Blender) to calculate end effector position & orientation
+% 1. Derive Approach from Base Position and Target
 
-Effector = fk(-1.143311, 0.6155, -2.5211)
+% Using Example 1
+Target = [ 0.1603; 0.5218; -0.4814 ];
+BasePosition = [ 0; 0; 0 ];
 
-% This is the result of calling the fk() function above with joint angles
+% Base position
+bx = BasePosition(1,1);
+by = BasePosition(2,1);
+bz = BasePosition(3,1);
 
-Effector = [
-    0.2426    0.3362   -0.9100    1.3954
-   -0.5325   -0.7379   -0.4146   -2.6287
-   -0.8109    0.5852    0.0000   -2.3121
-         0         0         0    1.0000
+% Target position
+tx = Target(1,1);
+ty = Target(2,1);
+
+% DH parameters (Drumstick frame "d" offset)
+Drumstickd = -0.023;
+
+angleToTarget = atan2(ty - by, tx - bx); % 1.2727
+distanceToTarget = sqrt((tx - bx)^2 + (ty - by)^2); % 0.5458
+angleWristOffset = abs(asin(Drumstickd / distanceToTarget)); % 0.0421
+baseAngle = angleToTarget - angleWristOffset; % 1.2305
+approachYawAngle = baseAngle - pi / 2; % -0.3403
+
+Aguess = [
+  cos(approachYawAngle);
+  sin(approachYawAngle);
+  0
 ];
+% [ 0.9427; -0.3337; 0]
 
-% Now go in reverse (calculate joint angles from end effector position & orientation)
-% The joint angles resoluting from solving the inverse equations should match what we started with
+% 2. Derive Normal from Approach, Shoulder Position, and Target
 
-% Generate matrixes for each joint with theta1, theta2, and theta3 as unknowns
+% Algebraic solution for Normal yaw
 
-Base =      dh(a = 0,    d = 1,     alpha = pi / 2,  theta = theta1)
-% This is a fixed offset matrix, not a joint
-Offset =    dh(a = -0.2, d = 0,     alpha = 0,       theta = 0)
-Shoulder =  dh(a = 3.5,  d = 0,     alpha = 0,       theta = theta2)
-Elbow =     dh(a = 3.5,  d = 0,     alpha = 0,       theta = theta3)
-% This is a fixed offset matrix, not a joint
-Wrist =     dh(a = 2.5,  d = -0.18, alpha = 0,       theta = 0.959931)
+normalYawAngle = approachYawAngle + pi / 2; % 1.2305
 
-% Solve the inverse kinematics equation for the three unknowns
+% Geometric solution for Normal Z component
 
-Base * Offset * Shoulder * Elbow * Wrist == Effector
+% Get shoulder position by running FK with first two frames
+B = dh(a = 0,         d = 0.11518,  alpha = pi / 2,  theta = baseAngle);
+O = dh(a = -0.013,    d = 0,        alpha = 0,       theta = 0);
+ShoulderPosition = B * O * [bx; by; bz; 1];
+% [ -0.0043; -0.0123; 0.1152 ]
 
-% Decouple Elbow from Base and Shoulder
+% Shoulder position
+rx = ShoulderPosition(1,1);
+ry = ShoulderPosition(2,1);
+rz = ShoulderPosition(3,1);
 
-Base * Offset * Shoulder * Elbow * Wrist * inv(Wrist) == Effector * inv(Wrist)
+% Target position
+tx = Target(1,1);
+ty = Target(2,1);
+tz = Target(3,1);
 
-Base * Offset * Shoulder * Elbow == Effector * inv(Wrist)
+normalPitchAngle = atan(sqrt((tx - rx)^2 + (ty - ry)^2) / (tz - rz)) % -0.7528
 
-Base * Offset * Shoulder * Elbow * inv(Elbow) == Effector * inv(Wrist) * inv(Elbow)
+Nguess = [
+  cos(normalYawAngle) * cos(normalPitchAngle);
+  sin(normalYawAngle) * cos(normalPitchAngle);
+  sin(normalPitchAngle)
+];
+% [ 0.2436; 0.688; -0.6837 ]
 
-Base * Offset * Shoulder == Effector * inv(Wrist) * inv(Elbow)
+% 3. Derive Orientation from Approach and Normal
 
-% Alias LHS (left hand side of the equation) and RHS (right hand side)
+Oguess = cross(Aguess, Nguess);
+% [ 0.2282; 0.6445; 0.7298 ]
 
-LHS = Base * Offset * Shoulder
+% 4. Assemble the End Effector matrix
 
-RHS = Effector * inv(Wrist) * inv(Elbow)
+EEguess = [
+  Nguess(1,1), Oguess(1,1), Aguess(1,1), Target(1,1);
+  Nguess(2,1), Oguess(2,1), Aguess(2,1), Target(2,1);
+  Nguess(3,1), Oguess(3,1), Aguess(3,1), Target(3,1);
+  0, 0, 0, 1
+];
+% [ 0.2436, 0.2282,  0.9427,  0.1603]
+% [  0.688, 0.6445, -0.3337,  0.5218]
+% [-0.6837, 0.7298,       0, -0.4814]
+% [      0,      0,       0,     1.0]
 
-% Select (1,3) from LHS and RHS
+% 5. Solve for the joint angles using IK equation
 
-sin(theta1) == -0.9100
+syms theta2 theta3 real
 
-% Solve for theta1 (Base)
+Base =      dh(a = 0,         d = 0.11518,  alpha = pi / 2,  theta = baseAngle);
+Offset =    dh(a = -0.013,    d = 0,        alpha = 0,       theta = 0);
+Shoulder =  dh(a = 0.4173,    d = 0,        alpha = 0,       theta = theta2);
+Elbow =     dh(a = 0.48059,   d = 0,        alpha = 0,       theta = theta3);
+Wrist =     dh(a = 0.008,     d = 0,        alpha = 0,       theta = pi / 4);
+Drumstick = dh(a = 0.295,     d = -0.023,   alpha = 0,       theta = -pi / 4 + 0.959931);
 
-theta1 = -1.1433
+% Base is already known since we solved for baseAngle geometrically
 
-% Select (2,4) from LHS and RHS
+IK = Base * Offset * Shoulder * Elbow * Wrist * Drumstick == EEguess;
+LHS = lhs(IK);
+RHS = rhs(IK);
 
-(7*cos(theta2)*sin(-1.1433))/2 - sin(-1.1433)/5 == -2.4187
+% Equations
 
-6557288672914079/36028797018963968 - (57376275887998193*cos(theta2))/18014398509481984 == -2.4187
+E1 = vpa(LHS(1,1) == RHS(1,1));
+E2 = vpa(LHS(1,2) == RHS(1,2));
+E3 = vpa(LHS(1,3) == RHS(1,3));
+E4 = vpa(LHS(1,4) == RHS(1,4));
 
-0.1820 - 3.1850 * cos(theta2) == -2.4187
+E5 = vpa(LHS(2,1) == RHS(2,1));
+E6 = vpa(LHS(2,2) == RHS(2,2));
+E7 = vpa(LHS(2,3) == RHS(2,3));
+E8 = vpa(LHS(2,4) == RHS(2,4));
 
--3.1850 * cos(theta2) == -2.6007
+E9 = vpa(LHS(3,1) == RHS(3,1));
+E10 = vpa(LHS(3,2) == RHS(3,2));
+E11 = vpa(LHS(3,3) == RHS(3,3));
+E12 = vpa(LHS(3,4) == RHS(3,4));
 
-cos(theta2) == 0.8165
+E13 = vpa(LHS(4,1) == RHS(4,1));
+E14 = vpa(LHS(4,2) == RHS(4,2));
+E15 = vpa(LHS(4,3) == RHS(4,3));
+E16 = vpa(LHS(4,4) == RHS(4,4));
 
-theta2 = 0.6155
+% As we can see, theta2 and theta3 are always coupled
 
-% Select (1,1) from LHS and RHS
+IK = Base * Offset * Shoulder * Elbow * Wrist * Drumstick == EEguess;
 
-cos(theta1)*cos(theta2) == (cos(theta3)*((1213*cos(8646289787802775/9007199254740992))/(5000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2)) - (1681*sin(8646289787802775/9007199254740992))/(5000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2))))/(cos(theta3)^2 + sin(theta3)^2) - (sin(theta3)*((1681*cos(8646289787802775/9007199254740992))/(5000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2)) + (1213*sin(8646289787802775/9007199254740992))/(5000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2))))/(cos(theta3)^2 + sin(theta3)^2)
+% Decouple theta3 (elbow) from theta2 (shoulder)
 
-0.3385 == (cos(theta3)*(0.1391 - (1681*0.8192)/(5000))) - (sin(theta3)*((1681*cos(8646289787802775/9007199254740992))/5000 + (1213*0.8192)/5000))
+IK = Base * Offset * Shoulder * Elbow * Wrist * Drumstick * inv(Drumstick) * inv(Wrist) * inv(Elbow) == EEguess * inv(Drumstick) * inv(Wrist) * inv(Elbow);
 
-0.3385 == cos(theta3) * -0.1363 - sin(theta3) * 0.3915
+IK = Base * Offset * Shoulder == EEguess * inv(Drumstick) * inv(Wrist) * inv(Elbow);
 
-% Select (2,1) from LHS and RHS
+LHS = lhs(IK);
+RHS = rhs(IK);
 
-0.8165*-0.9100 == (sin(theta3)*((7379*cos(8646289787802775/9007199254740992))/(10000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2)) + (213*sin(8646289787802775/9007199254740992))/(400*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2))))/(cos(theta3)^2 + sin(theta3)^2) - (cos(theta3)*((213*cos(8646289787802775/9007199254740992))/(400*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2)) - (7379*sin(8646289787802775/9007199254740992))/(10000*(sin(8646289787802775/9007199254740992)^2 + cos(8646289787802775/9007199254740992)^2))))/(cos(theta3)^2 + sin(theta3)^2)
+% Equations
 
--0.7430 == sin(theta3) * 0.8594 - cos(theta3)* -0.2991
+E1 = vpa(LHS(1,1) == RHS(1,1));
+E2 = vpa(LHS(1,2) == RHS(1,2));
+E3 = vpa(LHS(1,3) == RHS(1,3));
+E4 = vpa(LHS(1,4) == RHS(1,4));
 
-% System of equations from (1,1) and (2,1)
+E5 = vpa(LHS(2,1) == RHS(2,1));
+E6 = vpa(LHS(2,2) == RHS(2,2));
+E7 = vpa(LHS(2,3) == RHS(2,3));
+E8 = vpa(LHS(2,4) == RHS(2,4));
 
-0.3385 == cos(theta3) * -0.1363 - sin(theta3) * 0.3915
--0.7430 == sin(theta3) * 0.8594 - cos(theta3)* -0.2991
+E9 = vpa(LHS(3,1) == RHS(3,1));
+E10 = vpa(LHS(3,2) == RHS(3,2));
+E11 = vpa(LHS(3,3) == RHS(3,3));
+E12 = vpa(LHS(3,4) == RHS(3,4));
 
-% Solve for cos(theta3)
+E13 = vpa(LHS(4,1) == RHS(4,1));
+E14 = vpa(LHS(4,2) == RHS(4,2));
+E15 = vpa(LHS(4,3) == RHS(4,3));
+E16 = vpa(LHS(4,4) == RHS(4,4));
 
-0.3385 == cos(theta3) * -0.1363 - sin(theta3) * 0.3915
+% E4 gives us theta2
 
-0.3385 == cos(theta3) * -0.1363 - sin(theta3) * 0.3915
+solve(E4, theta2)
+% theta2 = +- 0.23079420855329669970264920936401
+% elbow up would be positive, elbow down would be negative
+% since we know our robot is fixed to elbow up configuraiton, we choose positive
 
-0.3385 + sin(theta3) * 0.3915 == cos(theta3) * -0.1363
+% E1 gives us theta3 in terms of theta2
 
--2.4835 + -2.8723 * sin(theta3) == cos(theta3)
+E1 = subs(E1, 'theta2', 0.2308)
+solve(E1, theta3)
+% theta3 = -1.9434964917358216317824910682065
 
-% Solve for sin(theta3)
+% Compare to Test Case 1
 
--0.7430 == sin(theta3) * 0.8594 - (-2.4835 + -2.8723 * sin(theta3)) * -0.2991
+theta11 = 1.230530;
+theta12 = 0.211682;
+theta13 = -1.926937;
 
--0.7430 == sin(theta3) * 0.8594 + (-2.4835 - 2.8723 * sin(theta3)) * 0.2991
+theta1 == baseAngle == 1.2305
+theta2 == 0.23079420855329669970264920936401
+theta3 == -1.926937
 
--0.7430 == 0.8594 * sin(theta3) + -0.7428 - 0.8591 * sin(theta3)
-
--0.7430 == 0.8594 * sin(theta3) - 0.7428 - 0.8591 * sin(theta3)
-
--2.0000e-04 == 0.8594 * sin(theta3) - 0.8591 * sin(theta3)
-
--2.0000e-04 == 0.0003 * sin(theta3)
-
--2.0000e-04 / 0.0003 == sin(theta3)
-
--0.6667 == sin(theta3)
-
-% Substitute into the first equation in the system
-
--2.4835 + -2.8723 * -0.6667 == cos(theta3)
-
--0.5685 == cos(theta3)
-
-% Now we have both sin and cos of theta3
-
-sin(theta3) == -0.6667
-cos(theta3) == -0.5685
-
-% Solve for theta3
-
-theta3 == atan2(-0.5685, -0.6667)
-
-theta3 == -2.4355
+% The match is close enough (within 0.1 degrees)

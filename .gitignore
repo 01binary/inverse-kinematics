@@ -1,1 +1,4 @@
-.isv
+*.isv
+*.blend1
+ik-gradient
+ik-newton-raphson
