@@ -12,12 +12,12 @@ double distanceToTarget(Vector3d target, MatrixXd angles)
   return (target - pose).norm();
 }
 
-double sample(Vector3d target, MatrixXd angles, int index, double samplingDistance)
+double sample(Vector3d target, MatrixXd angles, int joint, double samplingDistance)
 {
   double first = distanceToTarget(target, angles);
 
   MatrixXd secondAngles = angles;
-  secondAngles(index, 0) += samplingDistance;
+  secondAngles(joint, 0) += samplingDistance;
 
   double second = distanceToTarget(target, secondAngles);
 
