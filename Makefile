@@ -1,7 +1,12 @@
 COMPILER = g++
 INCLUDE = /opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3
 
-gradient-descent: fk.cpp ik-gradient.cpp
-	${COMPILER} -o ik-gradient ik-gradient.cpp -I${INCLUDE}
-	${COMPILER} -o ik-newton-raphson ik-newton-raphson.cpp -I${INCLUDE}
-	${COMPILER} -o fk fk.cpp -I${INCLUDE}
+gradient-descent:
+	${COMPILER} -o ik-gradient src/ik-gradient.cpp -I${INCLUDE}
+	${COMPILER} -o ik-newton-raphson src/ik-newton-raphson.cpp -I${INCLUDE}
+	${COMPILER} -o fk src/fk.cpp -I${INCLUDE}
+
+clean:
+	@rm ik-gradient
+	@rm ik-newton-raphson
+	@rm fk
