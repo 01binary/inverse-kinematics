@@ -3,7 +3,7 @@ function frame = dh(parameters)
     a = parameters.a;
     d = parameters.d;
     alpha = parameters.alpha;
-    theta = sym(parameters.theta);
+    theta = parameters.theta;
 
     frame = [
         [cos(theta), -sin(theta) * cos(alpha), sin(theta) * sin(alpha), a * cos(theta)];

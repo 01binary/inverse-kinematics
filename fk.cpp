@@ -5,16 +5,20 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-  if (argc < 4)
+  if (argc < 2)
   {
-    cout << "Usage: " << argv[0] << " <base> <shoulder> <elbow>" << endl;
+    cout << "Usage: " << argv[0] << " <angle1> <angle2> <anglen>" << endl;
     return 1;
   }
 
-  MatrixXd angles(3, 1);
-  angles << atof(argv[1]), atof(argv[2]), atof(argv[3]);
+  MatrixXd angles(argc - 1, 1);
 
-  Matrix4d pose = forwardKinematics(angles);
+  for (int n = 1; n < argc; n++)
+  {
+    angles(n - 1, 0) = atof(argv[n]);
+  }
+
+  Matrix4d pose = forwardKinematics(str1ker, angles);
 
   cout << "Forward Kinematics" << endl << endl;
   cout << "Given Angles" << endl;

@@ -4,7 +4,6 @@ function S = eu(unitVector)
   y = unitVector(2,1);
   z = unitVector(3,1);
 
-  % We don't want them imaginary numbers
   syms pitch yaw real
 
   [yaw, pitch] = solve(...
@@ -18,6 +17,6 @@ function S = eu(unitVector)
     ]...
   );
 
-  S.yaw = round(yaw,4);
-  S.pitch = round(pitch,4);
+  S.yaw = vpa(yaw,4);
+  S.pitch = vpa(pitch,4);
 end

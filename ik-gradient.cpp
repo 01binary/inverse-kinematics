@@ -7,7 +7,7 @@ using namespace Eigen;
 
 double distanceToTarget(Vector3d target, MatrixXd angles)
 {
-  Matrix4d endEffector = forwardKinematics(angles);
+  Matrix4d endEffector = forwardKinematics(str1ker, angles);
   Vector3d pose = endEffector.block<3, 1>(0, 3);
   return (target - pose).norm();
 }

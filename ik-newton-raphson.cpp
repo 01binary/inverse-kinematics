@@ -7,7 +7,7 @@ using namespace Eigen;
 
 Vector3d forwardKinematicsPose(MatrixXd angles)
 {
-  Matrix4d endEffector = forwardKinematics(angles);
+  Matrix4d endEffector = forwardKinematics(str1ker, angles);
   return endEffector.block<3, 1>(0, 3);
 }
 
