@@ -75,12 +75,12 @@ Matrix4d kuka(int joint, double angle)
 {
   switch (joint)
   {
-    case 0: // base
+    case 0: // shoulder
       return (
         Translation3d(0, 0, 0.203) *
         AngleAxisd(angle, Vector3d::UnitZ())
       ).matrix();
-    case 1: // shoulder
+    case 1: // bicep
       return (
         Translation3d(0.075, 0.0735, 0.13) *
         AngleAxisd(angle, Vector3d::UnitY())
