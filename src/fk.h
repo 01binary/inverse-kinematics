@@ -32,8 +32,8 @@ Matrix4d str1kerBasic(int joint, double angle)
     case 0: // base
       return (
         Translation3d(0, 0, 0) *
-        AngleAxisd(M_PI / 2, Vector3d::UnitX()) *
-        AngleAxisd(angle, Vector3d::UnitZ())
+        AngleAxisd(angle, Vector3d::UnitZ()) *
+        AngleAxisd(M_PI / 2, Vector3d::UnitX())
       ).matrix();
     case 1: // shoulder
       return (
@@ -44,7 +44,9 @@ Matrix4d str1kerBasic(int joint, double angle)
       return (
         Translation3d(0.4173, 0, 0) *
         AngleAxisd(angle, Vector3d::UnitZ()) *
-        Translation3d(0.48059, 0, -0.023)
+        Translation3d(0.48059, 0, -0.023) *
+        AngleAxisd(0.959931, Vector3d::UnitZ()) *
+        Translation3d(0.305, 0, 0)
       ).matrix();
     default:
       return Matrix4d::Identity();
@@ -69,8 +71,6 @@ Matrix4d str1ker(int joint, double angle)
   }
 }
 
-// this is how we start without DH parameters!
-
 Matrix4d kuka(int joint, double angle)
 {
   switch (joint)
@@ -90,20 +90,21 @@ Matrix4d kuka(int joint, double angle)
         Translation3d(0, -0.0055, 0.27) *
         AngleAxisd(angle, Vector3d::UnitY())
       ).matrix();
-    case 3: // wrist
+    case 3: // forearm
       return (
         Translation3d(0.106, -0.068001, 0.09) *
         AngleAxisd(angle, Vector3d::UnitX())
       ).matrix();
-    case 4: // hand
+    case 4: // wrist
       return (
         Translation3d(0.187, -0.029, 0) *
         AngleAxisd(angle, Vector3d::UnitY())
       ).matrix();
-    case 5: // effector
+    case 5: // palm
       return (
         Translation3d(0.052, 0.029, 0) *
-        AngleAxisd(angle, Vector3d::UnitX())
+        AngleAxisd(angle, Vector3d::UnitX()) *
+        Translation3d(0.03, 0, 0)
       ).matrix();
     default:
       return Matrix4d::Identity();

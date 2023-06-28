@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     angles(n - 1, 0) = atof(argv[n]);
   }
 
-  Matrix4d pose = forwardKinematics(str1ker, angles);
+  Matrix4d pose = forwardKinematics(str1kerBasic, angles);
 
   cout << "Forward Kinematics" << endl << endl;
   cout << "Given Angles" << endl;
