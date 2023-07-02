@@ -13,12 +13,10 @@ bz = BasePosition(3,1);
 tx = Target(1,1);
 ty = Target(2,1);
 
-% DH parameters (Drumstick frame "d" offset)
-Drumstickd = -0.023;
-
+drumstickOffset = -0.023;
 angleToTarget = atan2(ty - by, tx - bx); % 1.2727
 distanceToTarget = sqrt((tx - bx)^2 + (ty - by)^2); % 0.5458
-angleWristOffset = abs(asin(Drumstickd / distanceToTarget)); % 0.0421
+angleWristOffset = abs(asin(drumstickOffset / distanceToTarget)); % 0.0421
 baseAngle = angleToTarget - angleWristOffset; % 1.2305
 approachYawAngle = baseAngle - pi / 2; % -0.3403
 
@@ -85,7 +83,7 @@ EEguess = [
 syms theta2 theta3 real
 
 Base = ...
-  dh(struct("a", 0,       "d", 0.11518, "alpha", pi / 2, "theta", baseAngle)), * ...
+  dh(struct("a", 0,       "d", 0.11518, "alpha", pi / 2, "theta", baseAngle)) * ...
   dh(struct("a", -0.013,  "d", 0,       "alpha",0,       "theta", 0));
 Shoulder = ...
   dh(struct("a", 0.4173,  "d", 0,       "alpha",0,       "theta", theta2));
@@ -134,25 +132,25 @@ RHS = rhs(IK);
 
 % Equations
 
-E1 = vpa(LHS(1,1) == RHS(1,1));
-E2 = vpa(LHS(1,2) == RHS(1,2));
-E3 = vpa(LHS(1,3) == RHS(1,3));
-E4 = vpa(LHS(1,4) == RHS(1,4));
+E1 = LHS(1,1) == RHS(1,1);
+E2 = LHS(1,2) == RHS(1,2);
+E3 = LHS(1,3) == RHS(1,3);
+E4 = LHS(1,4) == RHS(1,4);
 
-E5 = vpa(LHS(2,1) == RHS(2,1));
-E6 = vpa(LHS(2,2) == RHS(2,2));
-E7 = vpa(LHS(2,3) == RHS(2,3));
-E8 = vpa(LHS(2,4) == RHS(2,4));
+E5 = LHS(2,1) == RHS(2,1);
+E6 = LHS(2,2) == RHS(2,2);
+E7 = LHS(2,3) == RHS(2,3);
+E8 = LHS(2,4) == RHS(2,4);
 
-E9 = vpa(LHS(3,1) == RHS(3,1));
-E10 = vpa(LHS(3,2) == RHS(3,2));
-E11 = vpa(LHS(3,3) == RHS(3,3));
-E12 = vpa(LHS(3,4) == RHS(3,4));
+E9 = LHS(3,1) == RHS(3,1);
+E10 = LHS(3,2) == RHS(3,2);
+E11 = LHS(3,3) == RHS(3,3);
+E12 = LHS(3,4) == RHS(3,4);
 
-E13 = vpa(LHS(4,1) == RHS(4,1));
-E14 = vpa(LHS(4,2) == RHS(4,2));
-E15 = vpa(LHS(4,3) == RHS(4,3));
-E16 = vpa(LHS(4,4) == RHS(4,4));
+E13 = LHS(4,1) == RHS(4,1);
+E14 = LHS(4,2) == RHS(4,2);
+E15 = LHS(4,3) == RHS(4,3);
+E16 = LHS(4,4) == RHS(4,4);
 
 % E4 gives us theta2
 
