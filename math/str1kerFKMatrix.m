@@ -1,4 +1,4 @@
-% Forward kinematics with matrices
+% Forward Kinematics with Matrices
 pkg load matgeom
 
 base = 0.4;

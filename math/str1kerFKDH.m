@@ -1,4 +1,4 @@
-% Forward kinematics with Denavit-Hartenberg parameters
+% Forward Kinematics with Denavit-Hartenberg parameters
 base = 0.4;
 shoulder = 0.8;
 elbow = -0.6;
@@ -11,7 +11,7 @@ Shoulder = ...
 Elbow = ...
   dh(struct("a", 0.48059, "d", 0,       "alpha",0,       "theta", elbow)) * ...
   dh(struct("a", 0.008,   "d", 0,       "alpha",0,       "theta", pi / 4)) * ...
-  dh(struct("a", 0.295,   "d",-0.023,   "alpha",0,       "theta", -pi / 4 + 0.959931));
+  dh(struct("a", 0.305,   "d",-0.023,   "alpha",0,       "theta", -pi / 4 + 0.959931));
 
 EE = Base * Shoulder * Elbow
 
