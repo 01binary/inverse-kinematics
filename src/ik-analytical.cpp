@@ -108,34 +108,7 @@ int main(int argc, char **argv)
   );
 
   // Elbow angle
-  double elbowAngle = -acos(
-    (
-      SQRT2 * (nx * oz - nz * ox) *
-      (
-        ox * cos(1572052035774335.0 / 9007199254740992.0) * cos(shoulderAngle) -
-        nx * cos(1572052035774335.0 / 9007199254740992.0) * cos(shoulderAngle) +
-        nx * sin(1572052035774335.0 / 9007199254740992.0) * cos(shoulderAngle) +
-        ox * sin(1572052035774335.0 / 9007199254740992.0) * cos(shoulderAngle) -
-        nz * cos(1572052035774335.0 / 9007199254740992.0) * cos(baseAngle) * sin(shoulderAngle) +
-        oz * cos(1572052035774335.0 / 9007199254740992.0) * cos(baseAngle) * sin(shoulderAngle) +
-        nz * sin(1572052035774335.0 / 9007199254740992.0) * cos(baseAngle) * sin(shoulderAngle) +
-        oz * sin(1572052035774335.0 / 9007199254740992.0) * cos(baseAngle) * sin(shoulderAngle)
-      )
-    )
-    /
-    (
-      2.0 * (
-        pow2(
-          pow2(nx) * pow2(cos(shoulderAngle)) +
-          pow2(ox) * pow2(cos(shoulderAngle)) +
-          pow2(nz) * pow2(cos(baseAngle)) * pow2(sin(shoulderAngle)) +
-          pow2(oz) * pow2(cos(baseAngle)) * pow2(sin(shoulderAngle)) +
-          2.0 * nx * nz * cos(baseAngle) * cos(shoulderAngle) * sin(shoulderAngle) +
-          2.0 * ox * oz * cos(baseAngle) * cos(shoulderAngle) * sin(shoulderAngle)
-        )
-      )
-    )
-  );
+  double elbowAngle = M_PI - acos((SQRT2*(nx*oz - nz*ox)*(ox*cos(1572052035774335/9007199254740992)*cos(shoulderAngle) - nx*cos(1572052035774335/9007199254740992)*cos(shoulderAngle) + nx*sin(1572052035774335/9007199254740992)*cos(shoulderAngle) + ox*sin(1572052035774335/9007199254740992)*cos(shoulderAngle) - nz*cos(1572052035774335/9007199254740992)*cos(baseAngle)*sin(shoulderAngle) + oz*cos(1572052035774335/9007199254740992)*cos(baseAngle)*sin(shoulderAngle) + nz*sin(1572052035774335/9007199254740992)*cos(baseAngle)*sin(shoulderAngle) + oz*sin(1572052035774335/9007199254740992)*cos(baseAngle)*sin(shoulderAngle)))/(2*(pow2(nx)*pow2(cos(shoulderAngle)) + pow2(ox)*pow2(cos(shoulderAngle)) + pow2(nz)*pow2(cos(baseAngle))*pow2(sin(shoulderAngle)) + pow2(oz)*pow2(cos(baseAngle))*pow2(sin(shoulderAngle)) + 2*nx*nz*cos(baseAngle)*cos(shoulderAngle)*sin(shoulderAngle) + 2*ox*oz*cos(baseAngle)*cos(shoulderAngle)*sin(shoulderAngle))));
 
   // Output
   cout
