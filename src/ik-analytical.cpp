@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <Eigen/Dense>
 
 using namespace std;
@@ -18,22 +19,31 @@ int main(int argc, char **argv)
   cout << "Enter Position and Orientation Matrix" << endl
        << "[" << endl;
 
-  double goal[3][4];
+  vector<vector<double>> goal;
 
-  for (int row = 0; row <= 3; row++)
+  for (int n = 0; n < 3; ++n)
   {
     cout << "  ";
 
-    for (int col = 0; col <= 4; col++)
+    string line;
+    getline(cin, line);
+
+    vector<double> row;
+    stringstream stream(line);
+
+    while (stream.good())
     {
-      cin >> goal[row][col];
-      cout << ", ";
+      string cell;
+      getline(stream, cell, ',');
+      row.push_back(stod(cell));
     }
 
-    cout << endl;
+    goal.push_back(row);
   }
 
-  cout << "0, 0, 0, 1" << endl;
+  goal.push_back({0, 0, 0, 1});
+
+  cout << "  0, 0, 0, 1" << endl;
   cout << "]" << endl << endl;
 
   double nx = goal[0][0];
@@ -98,7 +108,7 @@ int main(int argc, char **argv)
   );
 
   // Elbow angle
-  double elbowAngle = M_PI - acos(
+  double elbowAngle = -acos(
     (
       SQRT2 * (nx * oz - nz * ox) *
       (
@@ -114,14 +124,14 @@ int main(int argc, char **argv)
     )
     /
     (
-      2 * (
+      2.0 * (
         pow2(
           pow2(nx) * pow2(cos(shoulderAngle)) +
           pow2(ox) * pow2(cos(shoulderAngle)) +
           pow2(nz) * pow2(cos(baseAngle)) * pow2(sin(shoulderAngle)) +
           pow2(oz) * pow2(cos(baseAngle)) * pow2(sin(shoulderAngle)) +
-          2 * nx * nz * cos(baseAngle) * cos(shoulderAngle) * sin(shoulderAngle) +
-          2 * ox * oz * cos(baseAngle) * cos(shoulderAngle) * sin(shoulderAngle)
+          2.0 * nx * nz * cos(baseAngle) * cos(shoulderAngle) * sin(shoulderAngle) +
+          2.0 * ox * oz * cos(baseAngle) * cos(shoulderAngle) * sin(shoulderAngle)
         )
       )
     )
@@ -131,11 +141,11 @@ int main(int argc, char **argv)
   cout
     << endl
     << "Base" << endl
-    << baseAngle << endl
+    << baseAngle << endl << endl
     << "Shoulder" << endl
-    << shoulderAngle << endl
+    << shoulderAngle << endl << endl
     << "Elbow" << endl
-    << elbowAngle << endl;
+    << elbowAngle << endl << endl;
 
   return 0;
 }
