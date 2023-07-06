@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Eigen/Dense>
+#include "fk.h"
 
 using namespace std;
 using namespace Eigen;
@@ -72,14 +73,20 @@ int main(int argc, char **argv)
   double innerElbowAngle = outerElbowAngle - elbowToGoalAngle;
   double elbowAngle = -(M_PI - innerElbowAngle);
 
+  // End Effector
+  MatrixXd angles(3, 1);
+  angles << baseAngle, shoulderAngle, elbowAngle;
+  Matrix4d endEffector = forwardKinematics(str1ker, angles);
+
   // Output
-  cout << endl
-       << "Base" << endl
-       << baseAngle << endl
+  cout << "Base" << endl
+       << baseAngle << endl << endl
        << "Shoulder" << endl
-       << shoulderAngle << endl
+       << shoulderAngle << endl << endl
        << "Elbow" << endl
-       << elbowAngle << endl;
+       << elbowAngle << endl << endl
+       << "End Effector" << endl
+       << endEffector << endl << endl;
 
   return 0;
 }
