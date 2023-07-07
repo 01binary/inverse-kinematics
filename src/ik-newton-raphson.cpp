@@ -42,12 +42,6 @@ int main(int argc, char** argv)
   const double SHOULDER_BIAS = 1;
   const double ELBOW_BIAS = -1;
 
-  const Vector3d JOINT_AXIS[] = {
-    Vector3d::UnitZ(),
-    Vector3d::UnitY(),
-    Vector3d::UnitY()
-  };
-
   if (argc < 4)
   {
     cout << "Usage: " << argv[0] << " <x> <y> <z>" << endl;
