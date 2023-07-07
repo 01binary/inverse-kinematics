@@ -96,18 +96,18 @@ int main(int argc, char **argv)
       (
         nx * shoulderCos * 8.111596779808571E-1 -
         ox * shoulderCos* 1.158455858812925 +
-        nz * cos(base) * shoulder * 8.111596779808571E-1 -
-        oz * cos(base) * shoulder * 1.158455858812925
+        nz * baseCos * shoulder * 8.111596779808571E-1 -
+        oz * baseCos * shoulder * 1.158455858812925
       ) * 7.071067811865475E-1
     )
     /
     (
       (nx * nx) * pow(shoulderCos, 2.0) +
       (ox * ox) * pow(shoulderCos, 2.0) +
-      (nz * nz) * pow(cos(base), 2.0) * pow(shoulder, 2.0) +
-      (oz * oz) * pow(cos(base), 2.0) * pow(shoulder, 2.0) +
-      nx * nz * cos(base) * shoulderCos * shoulder * 2.0 +
-      ox * oz * cos(base) * shoulderCos * shoulder * 2.0
+      (nz * nz) * pow(baseCos, 2.0) * pow(shoulder, 2.0) +
+      (oz * oz) * pow(baseCos, 2.0) * pow(shoulder, 2.0) +
+      nx * nz * baseCos * shoulderCos * shoulder * 2.0 +
+      ox * oz * baseCos * shoulderCos * shoulder * 2.0
     )
   );
 
