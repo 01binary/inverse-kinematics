@@ -103,8 +103,8 @@ function [baseAngle, shoulderAngle, elbowAngle] = delta(parameters)
   %   c == upperArmLength
   %   a == forearmLength
   %   b == distance between shoulder and wrist
-  %   subtract result from pi (180deg) since we want the angle
-  %   between the upper arm and the forearm
+  %   subtract result from pi (180deg) because
+  %   our "0" joint position is 180 degrees geometrically
 
   elbowAngle = (pi - acos(
     (
