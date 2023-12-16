@@ -18,8 +18,12 @@
 %   )
 
 function [baseAngle, shoulderAngle, elbowAngle] = delta(parameters)
+  % Constants
+
   upperArmLength = 1.0678;
   forearmLength = 1.28925;
+
+  % Parameters
 
   shoulderOffsetX = parameters.shoulder(1,1);
   shoulderOffsetY = parameters.shoulder(2,1);
@@ -48,6 +52,7 @@ function [baseAngle, shoulderAngle, elbowAngle] = delta(parameters)
   baseAngle = atan2(shoulderOffsetY - wristY, shoulderOffsetX - wristX);
 
   % Step 3 - Calculate the distance between shoulder and wrist
+  %   This is used as the hypotenuse to calculate shoulder and elbow angles
 
   shoulderToWristSq = (
     (wristX - shoulderOffsetX)^2 +
@@ -73,6 +78,8 @@ function [baseAngle, shoulderAngle, elbowAngle] = delta(parameters)
   %   c == upperArmLength
   %   a == forearmLength
   %   b == distance between shoulder and wrist
+  %   subtract result from shoulderWristAngle because
+  %   we want the arm elbow to bend outward from the baseline
 
   shoulderAngle = shoulderWristAngle - acos(
     (
@@ -89,13 +96,15 @@ function [baseAngle, shoulderAngle, elbowAngle] = delta(parameters)
   );
 
   % Step 6 - Calculate elbow angle
-  % Invoke law of cosines
-  % b^2 == a^2 + c^2 - 2ac * cos(beta)
-  % cos(beta) = (b^2 - a^2 - c^2) / -2ac
-  % all variables same as before:
-  % c == upperArmLength
-  % a == forearmLength
-  % b == distance between shoulder and wrist
+  %   Invoke law of cosines
+  %   b^2 == a^2 + c^2 - 2ac * cos(beta)
+  %   cos(beta) = (b^2 - a^2 - c^2) / -2ac
+  %   all variables same as before:
+  %   c == upperArmLength
+  %   a == forearmLength
+  %   b == distance between shoulder and wrist
+  %   subtract result from pi (180deg) since we want the angle
+  %   between the upper arm and the forearm
 
   elbowAngle = (pi - acos(
     (
