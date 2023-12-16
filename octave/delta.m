@@ -7,6 +7,8 @@
 % 3   | -0.399483, 0.69194, 0.0  | -0.199742, 0.34597, 0.0
 
 % Example usage to calculate angles for arm 1
+%   Choose shoulder and wrist offsets from the table, then plug in target position
+%
 %   [baseAngle, shoulderAngle, elbowAngle] = delta(
 %     struct(
 %       "shoulder", [0.798967; 0.0; 0.0],
