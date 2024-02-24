@@ -51,7 +51,7 @@ If you are looking for a more rigorous background, [Introduction to Robotics](ht
 + *Joint types* include *Revolute* and *Prismatic*
 + *Joints* define *limits*, *offset* from previous joint, and movement *axis*
 + *Links* define *visual* and *simulation* properties
-+ Examples: [KUKA KR-5](https://github.com/orsalmon/kuka_manipulator_gazebo), [Str1ker](https://github.com/01binary/str1ker_moveit_config)
++ Examples: [KUKA KR-5](https://github.com/orsalmon/kuka_manipulator_gazebo), [Basic](https://github.com/01binary/basic_velocity_control/tree/pretty/description), [Str1ker](https://github.com/01binary/str1ker_moveit_config)
 
 ## 8. Representing Joints
 
