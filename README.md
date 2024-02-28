@@ -21,6 +21,8 @@ Companion files and source code for [Inverse Kinematics presentation](https://do
 
 If you are looking for a more rigorous background, [Introduction to Robotics](https://www.amazon.com/Introduction-Robotics-Analysis-Control-Applications/dp/0470604468/ref) by Saeed Niku is a great resource for inverse kinematics and control systems.
 
+See additional resources in `./resources` folder of this repo.
+
 ## 5. Table of Contents
 
 - Robot Description
