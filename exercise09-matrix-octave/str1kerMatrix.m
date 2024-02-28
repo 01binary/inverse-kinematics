@@ -23,6 +23,7 @@ Elbow = ...
 % Tool
   createTranslation3d(0.305, 0, 0);
 
+% Forward Kinematics
 EE = Base * Shoulder * Elbow
 
 % Visualize in Blender

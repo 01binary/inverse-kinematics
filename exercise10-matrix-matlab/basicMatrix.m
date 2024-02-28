@@ -20,6 +20,7 @@ Wrist = ...
 Tool = ...
   makehgtform('translate', [0.18, 0, 0]);
 
+% Forward Kinematics
 EE = Base * Shoulder * Elbow * Wrist * Tool;
 
 % Visualize in Blender

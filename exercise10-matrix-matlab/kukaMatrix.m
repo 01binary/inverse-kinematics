@@ -30,6 +30,7 @@ Palm = ...
 Tool = ...
   makehgtform('translate', [0.03, 0, 0]);
 
+% Forward Kinematics
 EE = Shoulder * Bicep * Elbow * Forearm * Wrist * Palm * Tool
 
 % Visualize in Blender

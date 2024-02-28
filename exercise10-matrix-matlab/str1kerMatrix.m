@@ -22,6 +22,7 @@ Elbow = ...
 % Tool
   makehgtform('translate', [0.305, 0, 0]);
 
+% Forward Kinematics
 EE = Base * Shoulder * Elbow
 
 % Visualize in Blender

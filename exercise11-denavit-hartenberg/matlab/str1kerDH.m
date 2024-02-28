@@ -16,6 +16,7 @@ Elbow = ...
   dh(a = 0.008,   d = 0,       alpha = 0,       theta = pi / 4) * ...
   dh(a = 0.305,   d = -0.023,  alpha = 0,       theta = -pi / 4 + 0.959931);
 
+% Forward Kinematics
 EE = Base * Shoulder * Elbow
 
 % Visualize in Blender
