@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  // Prompt for goal position
+  // Parse goal position
   Vector3d goal;
   goal << stod(argv[1]), stod(argv[2]), stod(argv[3]);
 
