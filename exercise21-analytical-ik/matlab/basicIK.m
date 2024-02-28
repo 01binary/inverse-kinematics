@@ -25,8 +25,8 @@ Elbow = ...
   translate(0.7, 0, 0) * ...
   yrotate(theta3);
 Wrist = translate(0.7, 0.05, 0) * ...
-  xrotate(theta4);
-Tool = translate(0.18, 0, 0);
+  xrotate(theta4) * ...
+  translate(0.18, 0, 0);
 
 % Define IK Equation
 IK = Base * Shoulder * Elbow * Wrist * Tool == EE;
@@ -44,19 +44,19 @@ IK = Base * Shoulder == EE * inv(Tool) * inv(Wrist) * inv(Elbow);
 LHS = lhs(IK);
 RHS = rhs(IK);
 
-E1 = simplify(LHS(1,1) == RHS(1,1));
-E2 = simplify(LHS(1,2) == RHS(1,2));
-E3 = simplify(LHS(1,3) == RHS(1,3));
-E4 = simplify(LHS(1,4) == RHS(1,4));
+E1 = LHS(1,1) == RHS(1,1);
+E2 = LHS(1,2) == RHS(1,2);
+E3 = LHS(1,3) == RHS(1,3);
+E4 = LHS(1,4) == RHS(1,4);
 
-E5 = simplify(LHS(2,1) == RHS(2,1));
-E6 = simplify(LHS(2,2) == RHS(2,2));
-E7 = simplify(LHS(2,3) == RHS(2,3));
-E8 = simplify(LHS(2,4) == RHS(2,4));
+E5 = LHS(2,1) == RHS(2,1);
+E6 = LHS(2,2) == RHS(2,2);
+E7 = LHS(2,3) == RHS(2,3);
+E8 = LHS(2,4) == RHS(2,4);
 
-E9 = simplify(LHS(3,1) == RHS(3,1));
-E10 = simplify(LHS(3,2) == RHS(3,2));
-E11 = simplify(LHS(3,3) == RHS(3,3));
-E12 = simplify(LHS(3,4) == RHS(3,4));
+E9 = LHS(3,1) == RHS(3,1);
+E10 = LHS(3,2) == RHS(3,2);
+E11 = LHS(3,3) == RHS(3,3);
+E12 = LHS(3,4) == RHS(3,4);
 
 % E9 has theta2 and theta3

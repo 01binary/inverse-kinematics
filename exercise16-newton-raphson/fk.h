@@ -25,7 +25,6 @@ Matrix4d forwardKinematics(MatrixXd jointVariables)
       Translation3d(0.7, 0.05, 0) *
       AngleAxisd(jointVariables(3,0), Vector3d::UnitX())
     ).matrix() *
-    // Tool
     (
       Translation3d(0.18, 0, 0) *
       AngleAxisd(0.0, Vector3d::UnitX())
