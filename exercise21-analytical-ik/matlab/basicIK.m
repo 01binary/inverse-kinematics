@@ -29,16 +29,13 @@ Wrist = translate(0.7, 0.05, 0) * ...
   translate(0.18, 0, 0);
 
 % Define IK Equation
-IK = Base * Shoulder * Elbow * Wrist * Tool == EE;
-
-% Decouple Tool Frame
-IK = Base * Shoulder * Elbow * Wrist == EE * inv(Tool);
+IK = Base * Shoulder * Elbow * Wrist == EE;
 
 % Decouple Wrist Frame
-IK = Base * Shoulder * Elbow == EE * inv(Tool) * inv(Wrist);
+IK = Base * Shoulder * Elbow == EE * inv(Wrist);
 
 % Decouple Elbow Frame
-IK = Base * Shoulder == EE * inv(Tool) * inv(Wrist) * inv(Elbow);
+IK = Base * Shoulder == EE * inv(Wrist) * inv(Elbow);
 
 % System of Nonlinear Equations from IK Equation
 LHS = lhs(IK);
@@ -58,5 +55,3 @@ E9 = LHS(3,1) == RHS(3,1);
 E10 = LHS(3,2) == RHS(3,2);
 E11 = LHS(3,3) == RHS(3,3);
 E12 = LHS(3,4) == RHS(3,4);
-
-% E9 has theta2 and theta3
