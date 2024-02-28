@@ -1,4 +1,5 @@
 # Inverse Kinematics
+### Numerical, Sampling-based, Analytical,and Geometric Solvers
 
 ## 1. Summary
 
