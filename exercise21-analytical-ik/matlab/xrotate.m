@@ -1,4 +1,7 @@
 function frame = xrotate(theta)
+  arguments
+    theta sym
+  end
   frame = [
     1, 0, 0, 0;
     0, cos(theta), -sin(theta), 0;

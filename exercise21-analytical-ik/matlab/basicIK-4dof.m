@@ -2,7 +2,7 @@
 
 % Define Joint Variables as Symbols
 % If you don't declare them as "real", you may get imaginary numbers
-syms theta1 theta2 theta3 theta4 real
+syms base shoulder elbow wrist real
 
 % Define Goal
 % Set from FK or Copy from bpy.data.objects["tool"].matrix_world in Blender
@@ -17,15 +17,15 @@ EE = ...
   translate(0.18, 0, 0)
 
 % Define Joint Frames
-Base = zrotate(theta1);
+Base = zrotate(base);
 Shoulder = ...
   translate(0, 0, 0.670) * ...
-  yrotate(theta2);
+  yrotate(shoulder);
 Elbow = ...
   translate(0.7, 0, 0) * ...
-  yrotate(theta3);
+  yrotate(elbow);
 Wrist = translate(0.7, 0.05, 0) * ...
-  xrotate(theta4) * ...
+  xrotate(wrist) * ...
   translate(0.18, 0, 0);
 
 % Define IK Equation
