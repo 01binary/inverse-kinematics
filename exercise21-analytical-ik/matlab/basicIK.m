@@ -4,8 +4,7 @@
 % If you don't declare them as "real", you may get imaginary numbers
 syms base shoulder elbow wrist real
 
-% Define Goal
-% Set from FK or Copy from bpy.data.objects["tool"].matrix_world in Blender
+% End-Effector Pose from IK
 EE = ...
   zrotate(-0.528585) * ... % base
   translate(0, 0, 0.670) * ...
