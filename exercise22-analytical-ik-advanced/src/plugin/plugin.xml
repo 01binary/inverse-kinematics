@@ -1,0 +1,7 @@
+<library path="lib/libbasic_ik_plugin">
+  <class name="basic/IKPlugin" type="basic::IKPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>
+      Basic IK solver for MoveIt!
+    </description>
+  </class>
+</library>
