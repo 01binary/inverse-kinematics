@@ -1,10 +1,36 @@
 #include <iostream>
+#include <Eigen/Dense>
 #include "fk.h"
 
 using namespace std;
+using namespace Eigen;
 
-Vector3d sample(MatrixXd jointVariables);
-MatrixXd calculateJacobian(const VectorXd& jointVariables);
+Vector3d forwardKinematicsPositionOnly(MatrixXd angles)
+{
+  Matrix4d endEffector = forwardKinematics(angles);
+  return endEffector.block<3, 1>(0, 3);
+}
+
+MatrixXd calculateJacobian(const VectorXd& angles)
+{
+  const double EPSILON = 1e-6;
+  const int joints = angles.size();
+
+  Vector3d pose = forwardKinematicsPositionOnly(angles);
+  MatrixXd jacobian(3, joints);
+
+  for (int n = 0; n < joints; ++n)
+  {
+    VectorXd deltaAngles = VectorXd::Zero(joints);
+    deltaAngles(n) = EPSILON;
+
+    const Vector3d diff = forwardKinematicsPositionOnly(angles + deltaAngles) - pose;
+
+    jacobian.block<3, 1>(0, n) = diff / EPSILON;
+  }
+
+  return jacobian;
+}
 
 int main(int argc, char** argv)
 {
@@ -15,73 +41,46 @@ int main(int argc, char** argv)
 
   // Initial joint states
   const double BASE_BIAS = 0;
-  const double SHOULDER_BIAS = -1;
-  const double ELBOW_BIAS = 1;
+  const double SHOULDER_BIAS = 1;
+  const double ELBOW_BIAS = -1;
   const double WRIST_BIAS = 0;
 
-  // Print usage if not enough arguments
   if (argc < 4)
   {
     cout << "Usage: " << argv[0] << " <x> <y> <z>" << endl;
     return 1;
   }
 
+  cout << "Inverse kinematics" << endl << endl;
+  cout << "Given Position" << endl;
+  cout << "[ "
+    << argv[1] << ", "
+    << argv[2] << ", "
+    << argv[3]
+    << " ]"
+    << endl
+    << endl;
+
   bool verbose = argc > 4 && string(argv[4]) == "--verbose";
 
-  // Prompt for goal position
-  Vector3d goal;
-  goal << stod(argv[1]), stod(argv[2]), stod(argv[3]);
+  Vector3d goalPose;
+  goalPose << stod(argv[1]), stod(argv[2]), stod(argv[3]);
 
-  cout << "Inverse Kinematics (Newton-Raphson Iterator)" << endl << endl;
-  cout << "Given Pose ["
-    << goal.x() << ", "
-    << goal.y() << ", "
-    << goal.z() << "]"
-  << endl;
-
-  // Run the algorithm
-  VectorXd jointVariables(4);
-  jointVariables << BASE_BIAS, SHOULDER_BIAS, ELBOW_BIAS, WRIST_BIAS;
+  VectorXd angles(4);
+  angles << BASE_BIAS, SHOULDER_BIAS, ELBOW_BIAS, WRIST_BIAS;
   
   for (int iteration = 0; iteration < MAX_ITERATIONS; iteration++)
   {
-    Vector3d pose = sample(jointVariables);
-    Vector3d error = goal - pose;
+    Vector3d pose = forwardKinematicsPositionOnly(angles);
+    Vector3d error = goalPose - pose;
 
     if (error.norm() < TOLERANCE) break;
 
-    MatrixXd Jtranspose = calculateJacobian(jointVariables).transpose();
-    jointVariables = jointVariables + DAMPING * (Jtranspose * error);
+    MatrixXd Jtranspose = calculateJacobian(angles).transpose();
+    angles = angles + DAMPING * (Jtranspose * error);
   }
 
-  cout << endl << "Joints" << endl << jointVariables << endl;
+  cout << endl << "Angles" << endl << angles << endl;
 
   return 0;
-}
-
-Vector3d sample(MatrixXd jointVariables)
-{
-  Matrix4d endEffector = forwardKinematics(jointVariables);
-  return endEffector.block<3, 1>(0, 3);
-}
-
-MatrixXd calculateJacobian(const VectorXd& jointVariables)
-{
-  const double EPSILON = 1e-6;
-  const int joints = jointVariables.size();
-
-  Vector3d pose = sample(jointVariables);
-  MatrixXd jacobian(3, joints);
-
-  for (int n = 0; n < joints; ++n)
-  {
-    VectorXd deltaAngles = VectorXd::Zero(joints);
-    deltaAngles(n) = EPSILON;
-
-    const Vector3d diff = sample(jointVariables + deltaAngles) - pose;
-
-    jacobian.block<3, 1>(0, n) = diff / EPSILON;
-  }
-
-  return jacobian;
 }
